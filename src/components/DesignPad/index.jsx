@@ -4,7 +4,7 @@ import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
 import { Grid } from './Grid';
 import { UserStoryCards } from './UserStoryCards';
 import { ChatBox } from './ChatBox';
-import { PdfViewer } from './PdfViewer';
+import PDFCardContainer from './PdfViewer';
 import { Logo } from './Logo';
 import { Navigation } from './Navigation';
 import { ZoomControls } from './ZoomControls';
@@ -20,7 +20,7 @@ export const DesignPad = () => {
         <UserStoryCards />
       </div>
       <div className="design-pad__documents">
-        <PdfViewer />
+        <PDFCardContainer />
       </div>
       <div className="design-pad__canvas-container">
         <div id="canvas">

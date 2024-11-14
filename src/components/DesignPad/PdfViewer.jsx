@@ -1,25 +1,32 @@
-
-// src/components/DesignPad/PdfViewer.jsx
 import React from 'react';
-import './styles/PdfViewer.css';
+import './PDFCard.css';
 
-export const PdfViewer = () => {
-  const pdfs = [
-    { name: 'Document1.pdf', path: '/path/to/doc1.pdf' },
-    { name: 'Document2.pdf', path: '/path/to/doc2.pdf' }
+const PDFCard = ({ fileName, filePath }) => {
+  return (
+    <div className="pdf-card">
+      <i className="fa-regular fa-file-pdf pdf-icon"></i>
+      <span className="file-name">{fileName}</span>
+      <a href={filePath} download={fileName} className="download-btn">
+        <i className="fa-solid fa-download"></i> {/* Font Awesome download icon */}
+      </a>
+    </div>
+  );
+};
+
+const PDFCardContainer = () => {
+  const documents = [
+    { fileName: 'Document1.pdf', filePath: 'path/to/Document1.pdf' },
+    { fileName: 'Document2.pdf', filePath: 'path/to/Document2.pdf' },
+    // Add more documents as needed
   ];
 
   return (
-    <div className="pdf-container">
-      {pdfs.map((pdf, index) => (
-        <div key={index} className="pdf-card">
-          <i className="fa-regular fa-file-pdf pdf-icon" />
-          <span className="file-name">{pdf.name}</span>
-          <a href={pdf.path} download className="download-btn">
-            Download
-          </a>
-        </div>
+    <div className="card-container">
+      {documents.map((doc, index) => (
+        <PDFCard key={index} fileName={doc.fileName} filePath={doc.filePath} />
       ))}
     </div>
   );
 };
+
+export default PDFCardContainer;

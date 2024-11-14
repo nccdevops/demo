@@ -5,12 +5,13 @@
     gap: 20px;
     padding: 20px;
     overflow-x: auto;
+    font-size: small;
   }
   
   .user-story-card {
-    width: 200px;
-    min-width: 200px;
-    height: 200px;
+    width: 100px;
+    min-width: 100px;
+    height: 100px;
     padding: 15px;
     border-radius: 5px;
     background: #E96230;

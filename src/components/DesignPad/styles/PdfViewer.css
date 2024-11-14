@@ -1,31 +1,36 @@
+.pdf-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* Reduce gap between cards */
+  z-index: 900;
+}
 
-  /* src/components/DesignPad/styles/PdfViewer.css */
-  .pdf-container {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 900;
-  }
-  
-  .pdf-card {
-    background: white;
-    padding: 12px;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .download-btn {
-    padding: 4px 8px;
-    background: #E96230;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.8em;
-  }
-  
+.pdf-card {
+  background: white;
+  padding: 8px; /* Reduce padding */
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slightly smaller shadow */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.file-name {
+  font-size: 0.9em; /* Smaller font size for file name */
+  flex: 1;
+  color: #333;
+  overflow: hidden;  /* Prevent overflow for long names */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.download-btn {
+  color: #E96230;
+  font-size: 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
