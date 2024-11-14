@@ -12,14 +12,6 @@ import Login from './components/Login';
 import FeedbackForm from './components/FeedbackForm';
 
 const PrivateRoute = ({ children }) => {
-
-  useEffect(() => {
-    const favicon = document.querySelector('link[rel="icon"]') || document.createElement('link');
-    favicon.rel = 'icon';
-    favicon.href = '/workspace/demo/public/favicon.ico'; // Update this path
-    document.head.appendChild(favicon);
-  }, []);
-
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 

@@ -1,0 +1,175 @@
+/* Global Styles */
+.landing {
+    background-color: #f3f4f6;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    background-image: url('https://source.unsplash.com/random/1920x1080');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .hero-content {
+    position: relative;
+    padding-top: 12rem;
+    padding-bottom: 12rem;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+  
+  .subtitle {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .buttons {
+    margin-top: 2rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+  }
+  
+  .btn-primary {
+    background-color: #3b82f6;
+    color: #ffffff;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2563eb;
+  }
+  
+  .btn-secondary {
+    background-color: #6b7280;
+    color: #ffffff;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #4b5563;
+  }
+  
+  /* Features Section */
+  .features {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  .features-grid, .testimonials-grid, .faq-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  /* Card Styles (Claymorphism) */
+  .clay {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 8px 8px 16px #d1d5db, -8px -8px 16px #ffffff;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .clay:hover {
+    transform: translateY(-5px);
+  }
+  
+  .feature-image {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .feature-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature-description {
+    color: #6b7280;
+  }
+  
+  /* Testimonials Section */
+  .testimonials {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    text-align: center;
+  }
+  
+  .testimonial-text {
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  
+  .testimonial-author {
+    font-weight: bold;
+  }
+  
+  /* FAQ Section */
+  .faq {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  .faq-question {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .faq-answer {
+    color: #6b7280;
+  }
+  
+  /* Footer Section */
+  .footer {
+    background-color: #1f2937;
+    color: #ffffff;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .footer-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .footer-links a {
+    color: #9ca3af;
+    margin-right: 1rem;
+  }
+  
+  .footer-links a:hover {
+    color: #d1d5db;
+  }
+  

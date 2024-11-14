@@ -1,8 +1,7 @@
-
-// components/Navbar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
+import './Navbar.css';  // Import the external CSS file
 
 const Navbar = ({ isAuthenticated }) => {
   const navigate = useNavigate();
@@ -17,24 +16,24 @@ const Navbar = ({ isAuthenticated }) => {
   };
 
   return (
-    <nav className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold">DesignPad</Link>
-        <div className="space-x-4">
-          <Link to="/about" className="hover:text-gray-300">About</Link>
+    <nav className="navbar">
+      <div className="container">
+        <Link to="/" className="brand">DesignPad</Link>
+        <div className="links">
+          <Link to="/about" className="link">About</Link>
           {isAuthenticated ? (
             <>
-              <Link to="/design" className="hover:text-gray-300">Design</Link>
-              <Link to="/feedback" className="hover:text-gray-300">Feedback</Link>
+              <Link to="/design" className="link">Design</Link>
+              <Link to="/feedback" className="link">Feedback</Link>
               <button
                 onClick={handleLogout}
-                className="hover:text-gray-300"
+                className="link logout-button"
               >
                 Logout
               </button>
             </>
           ) : (
-            <Link to="/login" className="hover:text-gray-300">Login</Link>
+            <Link to="/login" className="link">Login</Link>
           )}
         </div>
       </div>

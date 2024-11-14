@@ -1,9 +1,8 @@
-
-// components/FeedbackForm.js
 import React, { useState } from 'react';
 import { db, auth } from '../config/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import './FeedbackForm.css';  // Import the external CSS file
 
 const FeedbackForm = () => {
   const [feedback, setFeedback] = useState('');
@@ -35,30 +34,30 @@ const FeedbackForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Provide Feedback</h2>
+    <div className="feedback-form-container">
+      <div className="feedback-header">
+        <h2 className="feedback-title">Provide Feedback</h2>
         <button
           onClick={handleLogout}
-          className="text-red-500 hover:text-red-600"
+          className="logout-button"
         >
           Logout
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="feedback-form">
         <div>
-          <label className="block mb-1">Your Feedback</label>
+          <label className="form-label">Your Feedback</label>
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            className="w-full p-2 border rounded h-32"
+            className="form-textarea"
             required
           />
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
+          className={`submit-button ${isSubmitting ? 'disabled' : ''}`}
         >
           {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
         </button>

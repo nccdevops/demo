@@ -1,0 +1,49 @@
+/* Navbar Styles */
+.navbar {
+    background-color: #1f2937; /* Tailwind's bg-gray-800 */
+    color: white;
+    padding: 1rem; /* Tailwind's p-4 */
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .brand {
+    font-size: 1.25rem; /* Tailwind's text-xl */
+    font-weight: bold;
+  }
+  
+  .links {
+    display: flex;
+    gap: 1rem; /* Tailwind's space-x-4 */
+  }
+  
+  .link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .link:hover {
+    color: #d1d5db; /* Tailwind's text-gray-300 */
+  }
+  
+  .logout-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  
+  /* Responsive Container */
+  @media (min-width: 768px) {
+    .container {
+      width: 90%;
+    }
+  }
+  
