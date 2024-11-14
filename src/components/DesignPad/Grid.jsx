@@ -10,6 +10,7 @@ import './styles/Grid.css';
 const EMPTY_DIAGRAM = `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
                   id="Definitions_1" 
                   targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:process id="Process_1" isExecutable="false">
@@ -38,9 +39,8 @@ export const Grid = () => {
     try {
       const bpmnModeler = new BpmnJS({
         container: bpmnRef.current,
-        keyboard: {
-          bindTo: window
-        }
+        height: '100%',
+        width: '100%'
       });
 
       setModeler(bpmnModeler);
@@ -62,29 +62,28 @@ export const Grid = () => {
     const loadDiagram = async () => {
       try {
         setLoadingStatus('loading-file');
-        // Try to fetch custom diagram first
-        const diagramPath = '/data/diagram.bpmn';
-        console.log('Attempting to load diagram from:', diagramPath);
-        
-        const response = await fetch(diagramPath);
-        console.log('Fetch response:', response.status, response.statusText);
+        const response = await fetch('/data/diagram.bpmn');
         
         if (!response.ok) {
           throw new Error(`Failed to load file (${response.status} ${response.statusText})`);
         }
 
         const bpmnXML = await response.text();
-        console.log('Successfully loaded BPMN XML:', bpmnXML.substring(0, 100) + '...');
+        console.log('Loaded BPMN XML length:', bpmnXML.length);
         
+        // Validate XML structure
+        if (!bpmnXML.includes('<?xml') || !bpmnXML.includes('bpmn:definitions')) {
+          throw new Error('Invalid BPMN XML structure');
+        }
+
         await importDiagram(bpmnXML);
       } catch (error) {
         console.error('Error loading diagram:', error);
-        // Attempt to load empty diagram instead
-        console.log('Attempting to load empty diagram as fallback');
         try {
+          console.log('Loading empty diagram as fallback');
           await importDiagram(EMPTY_DIAGRAM);
         } catch (emptyError) {
-          setError(`Failed to load both custom and empty diagrams. Original error: ${error.message}. Empty diagram error: ${emptyError.message}`);
+          setError(`Failed to load diagrams: ${error.message}`);
         }
       }
     };
@@ -92,21 +91,31 @@ export const Grid = () => {
     const importDiagram = async (xml) => {
       try {
         setLoadingStatus('importing-xml');
-        const result = await modeler.importXML(xml);
         
-        if (result.warnings?.length) {
-          console.warn('Warnings while importing BPMN diagram:', result.warnings);
+        // Create a new promise to handle the import
+        const importResult = await new Promise((resolve, reject) => {
+          modeler.importXML(xml, (err, warnings) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(warnings);
+            }
+          });
+        });
+
+        console.log('Import successful, warnings:', importResult);
+
+        // Get the canvas and zoom to fit
+        const canvas = modeler.get('canvas');
+        if (canvas) {
+          canvas.zoom('fit-viewport');
         }
 
-        // Zoom to fit the diagram
-        const canvas = modeler.get('canvas');
-        canvas.zoom('fit-viewport');
-        
         setError(null);
         setLoadingStatus('complete');
       } catch (err) {
         console.error('Error importing BPMN XML:', err);
-        setError(`Failed to import diagram: ${err.message}`);
+        setError(`Import error: ${err.message}`);
         setLoadingStatus('error');
       }
     };
@@ -154,14 +163,14 @@ export const Grid = () => {
   }, []);
 
   return (
-    <div className="design-pad">
+    <div className="design-pad" style={{ width: '100%', height: '800px' }}>
       <svg ref={canvasRef} className="design-pad__grid" />
       {error ? (
         <div className="error-alert">
           <div className="error-alert__title">Error</div>
           <div className="error-alert__description">
             {error}
-            <div className="error-alert__status">Loading status: {loadingStatus}</div>
+            <div className="error-alert__status">Status: {loadingStatus}</div>
           </div>
         </div>
       ) : (

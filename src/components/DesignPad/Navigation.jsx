@@ -24,7 +24,7 @@ export const Navigation = () => {
                 </a>
             </li>
             <li>
-                <a href="/" onClick={() => Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')}>
+                <a href="/">
                     Cookie Preferences
                 </a>
             </li>
