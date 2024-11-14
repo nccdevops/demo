@@ -29,7 +29,7 @@ export const Navigation = () => {
                 </a>
             </li>
             <li>
-                <a title="More information about this demo" data-track="help:open-about">
+                <a href="/" title="More information about this demo" data-track="help:open-about">
                     About
                 </a>
             </li>

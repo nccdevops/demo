@@ -1,337 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
-  <!-- Message Definitions -->
-  <bpmn:message id="Message_ProcessModelGenerated" name="ProcessModelGenerated" />
-  <bpmn:message id="Message_DataModelGenerated" name="DataModelGenerated" />
-
-  <!-- Process Definition -->
-  <bpmn:process id="Process_UserFlow" isExecutable="true">
-    <!-- Start Event -->
-    <bpmn:startEvent id="StartEvent_Login" name="Start Login">
-      <bpmn:outgoing>Flow_Login</bpmn:outgoing>
-    </bpmn:startEvent>
-
-    <!-- User Login Task -->
-    <bpmn:task id="Task_UserLogin" name="User Login">
-      <bpmn:incoming>Flow_Login</bpmn:incoming>
-      <bpmn:outgoing>Flow_LoginChoice</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Choose Action Gateway -->
-    <bpmn:exclusiveGateway id="Gateway_ChooseAction" name="Choose Action">
-      <bpmn:incoming>Flow_LoginChoice</bpmn:incoming>
-      <bpmn:outgoing>Flow_UseApp</bpmn:outgoing>
-      <bpmn:outgoing>Flow_ProvideFeedback</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-
-    <!-- Provide Feedback Task -->
-    <bpmn:task id="Task_ProvideFeedback" name="Provide Feedback">
-      <bpmn:incoming>Flow_ProvideFeedback</bpmn:incoming>
-    </bpmn:task>
-
-    <!-- Use App Task -->
-    <bpmn:task id="Task_UseApp" name="Use App">
-      <bpmn:incoming>Flow_UseApp</bpmn:incoming>
-      <bpmn:outgoing>Flow_FillQuestionnaire</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Fill Questionnaire Task -->
-    <bpmn:task id="Task_FillQuestionnaire" name="Fill Questionnaire">
-      <bpmn:incoming>Flow_FillQuestionnaire</bpmn:incoming>
-      <bpmn:outgoing>Flow_GenerateStakeholders</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Generate Stakeholders Task -->
-    <bpmn:task id="Task_GenerateStakeholders" name="Generate Stakeholders">
-      <bpmn:incoming>Flow_GenerateStakeholders</bpmn:incoming>
-      <bpmn:outgoing>Flow_StakeholdersGenerated</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Approve or Improve Gateway -->
-    <bpmn:exclusiveGateway id="Gateway_ApproveOrImprove" name="Approve or Improve">
-      <bpmn:incoming>Flow_StakeholdersGenerated</bpmn:incoming>
-      <bpmn:outgoing>Flow_ApproveStakeholders</bpmn:outgoing>
-      <bpmn:outgoing>Flow_ImproveStakeholders</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-
-    <!-- Approve Stakeholders Task -->
-    <bpmn:task id="Task_ApproveStakeholders" name="Approve Stakeholders">
-      <bpmn:incoming>Flow_ApproveStakeholders</bpmn:incoming>
-      <bpmn:outgoing>Flow_Artifacts</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Generate Artifacts Subprocess -->
-    <bpmn:subProcess id="SubProcess_GenerateArtifacts" name="Generate Artifacts">
-      <bpmn:incoming>Flow_Artifacts</bpmn:incoming>
-      <bpmn:outgoing>Flow_StoreContent</bpmn:outgoing>
-      <bpmn:startEvent id="StartEvent_SubProcess">
-        <bpmn:outgoing>Flow_StartToGenerate</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Task_Generate" name="Generate">
-        <bpmn:incoming>Flow_StartToGenerate</bpmn:incoming>
-        <bpmn:outgoing>Flow_EndArtifact</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:endEvent id="EndEvent_SubProcess">
-        <bpmn:incoming>Flow_EndArtifact</bpmn:incoming>
-      </bpmn:endEvent>
-    </bpmn:subProcess>
-
-    <!-- Store Content Task -->
-    <bpmn:task id="Task_StoreContent" name="Store Content">
-      <bpmn:incoming>Flow_StoreContent</bpmn:incoming>
-      <bpmn:outgoing>Flow_ProcessModelEvent</bpmn:outgoing>
-      <bpmn:outgoing>Flow_DataModelEvent</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Process Model Generated Event -->
-    <bpmn:intermediateThrowEvent id="Event_ProcessModelGenerated" name="Process Model Generated">
-      <bpmn:incoming>Flow_ProcessModelEvent</bpmn:incoming>
-      <bpmn:outgoing>Flow_DisplayProcessModel</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_ProcessModel" messageRef="Message_ProcessModelGenerated" />
-    </bpmn:intermediateThrowEvent>
-
-    <!-- Display Process Model Task -->
-    <bpmn:task id="Task_DisplayProcessModel" name="Display Process Model">
-      <bpmn:incoming>Flow_DisplayProcessModel</bpmn:incoming>
-    </bpmn:task>
-
-    <!-- Data Model Generated Event -->
-    <bpmn:intermediateThrowEvent id="Event_DataModelGenerated" name="Data Model Generated">
-      <bpmn:incoming>Flow_DataModelEvent</bpmn:incoming>
-      <bpmn:outgoing>Flow_GenerateUI</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_DataModel" messageRef="Message_DataModelGenerated" />
-    </bpmn:intermediateThrowEvent>
-
-    <!-- Generate UI Elements Task -->
-    <bpmn:task id="Task_GenerateUI" name="Generate UI Elements">
-      <bpmn:incoming>Flow_GenerateUI</bpmn:incoming>
-      <bpmn:outgoing>Flow_DomainServices</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- Generate Domain Services Task -->
-    <bpmn:task id="Task_GenerateDomainServices" name="Generate Domain Services">
-      <bpmn:incoming>Flow_DomainServices</bpmn:incoming>
-      <bpmn:outgoing>Flow_EndProcess</bpmn:outgoing>
-    </bpmn:task>
-
-    <!-- End Event -->
-    <bpmn:endEvent id="EndEvent_ProcessComplete" name="Process Complete">
-      <bpmn:incoming>Flow_EndProcess</bpmn:incoming>
-    </bpmn:endEvent>
-
-    <!-- Sequence Flows -->
-    <bpmn:sequenceFlow id="Flow_Login" sourceRef="StartEvent_Login" targetRef="Task_UserLogin" />
-    <bpmn:sequenceFlow id="Flow_LoginChoice" sourceRef="Task_UserLogin" targetRef="Gateway_ChooseAction" />
-    <bpmn:sequenceFlow id="Flow_UseApp" sourceRef="Gateway_ChooseAction" targetRef="Task_UseApp" />
-    <bpmn:sequenceFlow id="Flow_ProvideFeedback" sourceRef="Gateway_ChooseAction" targetRef="Task_ProvideFeedback" />
-    <bpmn:sequenceFlow id="Flow_FillQuestionnaire" sourceRef="Task_UseApp" targetRef="Task_FillQuestionnaire" />
-    <bpmn:sequenceFlow id="Flow_GenerateStakeholders" sourceRef="Task_FillQuestionnaire" targetRef="Task_GenerateStakeholders" />
-    <bpmn:sequenceFlow id="Flow_StakeholdersGenerated" sourceRef="Task_GenerateStakeholders" targetRef="Gateway_ApproveOrImprove" />
-    <bpmn:sequenceFlow id="Flow_ApproveStakeholders" sourceRef="Gateway_ApproveOrImprove" targetRef="Task_ApproveStakeholders" />
-    <bpmn:sequenceFlow id="Flow_ImproveStakeholders" sourceRef="Gateway_ApproveOrImprove" targetRef="Task_GenerateStakeholders" />
-    <bpmn:sequenceFlow id="Flow_Artifacts" sourceRef="Task_ApproveStakeholders" targetRef="SubProcess_GenerateArtifacts" />
-    <bpmn:sequenceFlow id="Flow_StartToGenerate" sourceRef="StartEvent_SubProcess" targetRef="Task_Generate" />
-    <bpmn:sequenceFlow id="Flow_EndArtifact" sourceRef="Task_Generate" targetRef="EndEvent_SubProcess" />
-    <bpmn:sequenceFlow id="Flow_StoreContent" sourceRef="SubProcess_GenerateArtifacts" targetRef="Task_StoreContent" />
-    <bpmn:sequenceFlow id="Flow_ProcessModelEvent" sourceRef="Task_StoreContent" targetRef="Event_ProcessModelGenerated" />
-    <bpmn:sequenceFlow id="Flow_DataModelEvent" sourceRef="Task_StoreContent" targetRef="Event_DataModelGenerated" />
-    <bpmn:sequenceFlow id="Flow_DisplayProcessModel" sourceRef="Event_ProcessModelGenerated" targetRef="Task_DisplayProcessModel" />
-    <bpmn:sequenceFlow id="Flow_GenerateUI" sourceRef="Event_DataModelGenerated" targetRef="Task_GenerateUI" />
-    <bpmn:sequenceFlow id="Flow_DomainServices" sourceRef="Task_GenerateUI" targetRef="Task_GenerateDomainServices" />
-    <bpmn:sequenceFlow id="Flow_EndProcess" sourceRef="Task_GenerateDomainServices" targetRef="EndEvent_ProcessComplete" />
-  </bpmn:process>
-
-  <!-- Added detailed diagram layout information -->
-  <bpmndi:BPMNDiagram id="Diagram_UserFlow">
-    <bpmndi:BPMNPlane id="Plane_UserFlow" bpmnElement="Process_UserFlow">
-      <!-- Start Event -->
-      <bpmndi:BPMNShape id="StartEvent_Login_di" bpmnElement="StartEvent_Login">
-        <dc:Bounds x="152" y="102" width="36" height="36" />
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <collaboration id="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
+    <participant id="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F" name="Customer" processRef="sid-C3803939-0872-457F-8336-EAE484DC4A04" />
+  </collaboration>
+  <process id="sid-C3803939-0872-457F-8336-EAE484DC4A04" name="Customer" processType="None" isClosed="false" isExecutable="false">
+    <extensionElements />
+    <laneSet id="sid-b167d0d7-e761-4636-9200-76b7f0e8e83a">
+      <lane id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254">
+        <flowNodeRef>sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26</flowNodeRef>
+        <flowNodeRef>sid-E49425CF-8287-4798-B622-D2A7D78EF00B</flowNodeRef>
+        <flowNodeRef>sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138</flowNodeRef>
+        <flowNodeRef>sid-E433566C-2289-4BEB-A19C-1697048900D2</flowNodeRef>
+        <flowNodeRef>sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9</flowNodeRef>
+        <flowNodeRef>SCAN_OK</flowNodeRef>
+      </lane>
+    </laneSet>
+    <task id="sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26" name="Scan QR code">
+      <incoming>sid-4DC479E5-5C20-4948-BCFC-9EC5E2F66D8D</incoming>
+      <outgoing>sid-EE8A7BA0-5D66-4F8B-80E3-CC2751B3856A</outgoing>
+    </task>
+    <task id="sid-E49425CF-8287-4798-B622-D2A7D78EF00B" name="Open product information in mobile  app">
+      <incoming>sid-8B820AF5-DC5C-4618-B854-E08B71FB55CB</incoming>
+      <outgoing>sid-57EB1F24-BD94-479A-BF1F-57F1EAA19C6C</outgoing>
+    </task>
+    <startEvent id="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138" name="Notices&#10;QR code">
+      <outgoing>sid-7B791A11-2F2E-4D80-AFB3-91A02CF2B4FD</outgoing>
+    </startEvent>
+    <endEvent id="sid-E433566C-2289-4BEB-A19C-1697048900D2" name="Is informed">
+      <incoming>sid-57EB1F24-BD94-479A-BF1F-57F1EAA19C6C</incoming>
+    </endEvent>
+    <exclusiveGateway id="sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9">
+      <incoming>sid-7B791A11-2F2E-4D80-AFB3-91A02CF2B4FD</incoming>
+      <incoming>sid-337A23B9-A923-4CCE-B613-3E247B773CCE</incoming>
+      <outgoing>sid-4DC479E5-5C20-4948-BCFC-9EC5E2F66D8D</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="SCAN_OK" name="Scan successful?&#10;">
+      <incoming>sid-EE8A7BA0-5D66-4F8B-80E3-CC2751B3856A</incoming>
+      <outgoing>sid-8B820AF5-DC5C-4618-B854-E08B71FB55CB</outgoing>
+      <outgoing>sid-337A23B9-A923-4CCE-B613-3E247B773CCE</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-337A23B9-A923-4CCE-B613-3E247B773CCE" name="Yes" sourceRef="SCAN_OK" targetRef="sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9" />
+    <sequenceFlow id="sid-4DC479E5-5C20-4948-BCFC-9EC5E2F66D8D" sourceRef="sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9" targetRef="sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26" />
+    <sequenceFlow id="sid-8B820AF5-DC5C-4618-B854-E08B71FB55CB" name="No" sourceRef="SCAN_OK" targetRef="sid-E49425CF-8287-4798-B622-D2A7D78EF00B" />
+    <sequenceFlow id="sid-57EB1F24-BD94-479A-BF1F-57F1EAA19C6C" sourceRef="sid-E49425CF-8287-4798-B622-D2A7D78EF00B" targetRef="sid-E433566C-2289-4BEB-A19C-1697048900D2" />
+    <sequenceFlow id="sid-EE8A7BA0-5D66-4F8B-80E3-CC2751B3856A" sourceRef="sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26" targetRef="SCAN_OK" />
+    <sequenceFlow id="sid-7B791A11-2F2E-4D80-AFB3-91A02CF2B4FD" sourceRef="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138" targetRef="sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9" />
+  </process>
+  <bpmndi:BPMNDiagram id="sid-74620812-92c4-44e5-949c-aa47393d3830">
+    <bpmndi:BPMNPlane id="sid-cdcae759-2af7-4a6d-bd02-53f3352a731d" bpmnElement="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
+      <bpmndi:BPMNShape id="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F_gui" bpmnElement="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F" isHorizontal="true">
+        <omgdc:Bounds x="83" y="105" width="933" height="250" />
+        <bpmndi:BPMNLabel labelStyle="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+          <omgdc:Bounds x="47.49999999999999" y="170.42857360839844" width="12.000000000000014" height="59.142852783203125" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- User Login Task -->
-      <bpmndi:BPMNShape id="Task_UserLogin_di" bpmnElement="Task_UserLogin">
-        <dc:Bounds x="240" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254_gui" bpmnElement="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254" isHorizontal="true">
+        <omgdc:Bounds x="113" y="105" width="903" height="250" />
       </bpmndi:BPMNShape>
-
-      <!-- Choose Action Gateway -->
-      <bpmndi:BPMNShape id="Gateway_ChooseAction_di" bpmnElement="Gateway_ChooseAction" isMarkerVisible="true">
-        <dc:Bounds x="395" y="95" width="50" height="50" />
+      <bpmndi:BPMNShape id="sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26_gui" bpmnElement="sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26">
+        <omgdc:Bounds x="393" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel labelStyle="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+          <omgdc:Bounds x="360.5" y="172" width="84" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Provide Feedback Task -->
-      <bpmndi:BPMNShape id="Task_ProvideFeedback_di" bpmnElement="Task_ProvideFeedback">
-        <dc:Bounds x="500" y="190" width="100" height="80" />
+      <bpmndi:BPMNShape id="sid-E49425CF-8287-4798-B622-D2A7D78EF00B_gui" bpmnElement="sid-E49425CF-8287-4798-B622-D2A7D78EF00B">
+        <omgdc:Bounds x="728" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel labelStyle="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+          <omgdc:Bounds x="695.9285736083984" y="162" width="83.14285278320312" height="36" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Use App Task -->
-      <bpmndi:BPMNShape id="Task_UseApp_di" bpmnElement="Task_UseApp">
-        <dc:Bounds x="500" y="80" width="100" height="80" />
+      <bpmndi:BPMNEdge id="sid-EE8A7BA0-5D66-4F8B-80E3-CC2751B3856A_gui" bpmnElement="sid-EE8A7BA0-5D66-4F8B-80E3-CC2751B3856A">
+        <omgdi:waypoint x="493" y="210" />
+        <omgdi:waypoint x="585" y="210" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="494" y="185" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sid-8B820AF5-DC5C-4618-B854-E08B71FB55CB_gui" bpmnElement="sid-8B820AF5-DC5C-4618-B854-E08B71FB55CB">
+        <omgdi:waypoint x="635" y="210" />
+        <omgdi:waypoint x="728" y="210" />
+        <bpmndi:BPMNLabel labelStyle="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581">
+          <omgdc:Bounds x="642" y="185" width="16" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sid-7B791A11-2F2E-4D80-AFB3-91A02CF2B4FD_gui" bpmnElement="sid-7B791A11-2F2E-4D80-AFB3-91A02CF2B4FD">
+        <omgdi:waypoint x="223" y="210" />
+        <omgdi:waypoint x="275" y="210" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="204" y="185" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sid-4DC479E5-5C20-4948-BCFC-9EC5E2F66D8D_gui" bpmnElement="sid-4DC479E5-5C20-4948-BCFC-9EC5E2F66D8D">
+        <omgdi:waypoint x="325" y="210" />
+        <omgdi:waypoint x="393" y="210" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="314" y="185" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sid-57EB1F24-BD94-479A-BF1F-57F1EAA19C6C_gui" bpmnElement="sid-57EB1F24-BD94-479A-BF1F-57F1EAA19C6C">
+        <omgdi:waypoint x="828" y="210" />
+        <omgdi:waypoint x="901" y="210" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="820" y="185" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sid-337A23B9-A923-4CCE-B613-3E247B773CCE_gui" bpmnElement="sid-337A23B9-A923-4CCE-B613-3E247B773CCE">
+        <omgdi:waypoint x="611" y="234" />
+        <omgdi:waypoint x="610.5" y="299" />
+        <omgdi:waypoint x="300.5" y="299" />
+        <omgdi:waypoint x="301" y="234" />
+        <bpmndi:BPMNLabel labelStyle="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581">
+          <omgdc:Bounds x="585" y="236" width="21" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_0l6sgn0_di" bpmnElement="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138">
+        <omgdc:Bounds x="187" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="182" y="229" width="46" height="24" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Fill Questionnaire Task -->
-      <bpmndi:BPMNShape id="Task_FillQuestionnaire_di" bpmnElement="Task_FillQuestionnaire">
-        <dc:Bounds x="660" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="EndEvent_0xwuvv5_di" bpmnElement="sid-E433566C-2289-4BEB-A19C-1697048900D2">
+        <omgdc:Bounds x="901" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="892" y="231" width="56" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Generate Stakeholders Task -->
-      <bpmndi:BPMNShape id="Task_GenerateStakeholders_di" bpmnElement="Task_GenerateStakeholders">
-        <dc:Bounds x="820" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="ExclusiveGateway_1g0eih2_di" bpmnElement="sid-5134932A-1863-4FFA-BB3C-A4B4078B11A9" isMarkerVisible="true">
+        <omgdc:Bounds x="275" y="185" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="210" y="160" width="90" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Approve or Improve Gateway -->
-      <bpmndi:BPMNShape id="Gateway_ApproveOrImprove_di" bpmnElement="Gateway_ApproveOrImprove" isMarkerVisible="true">
-        <dc:Bounds x="975" y="95" width="50" height="50" />
+      <bpmndi:BPMNShape id="ExclusiveGateway_0vci1x5_di" bpmnElement="SCAN_OK" isMarkerVisible="true">
+        <omgdc:Bounds x="585" y="185" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="568" y="157" width="88" height="24" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-
-      <!-- Approve Stakeholders Task -->
-      <bpmndi:BPMNShape id="Task_ApproveStakeholders_di" bpmnElement="Task_ApproveStakeholders">
-        <dc:Bounds x="1080" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-
-      <!-- Generate Artifacts Subprocess -->
-      <bpmndi:BPMNShape id="SubProcess_GenerateArtifacts_di" bpmnElement="SubProcess_GenerateArtifacts" isExpanded="true">
-        <dc:Bounds x="1240" y="80" width="350" height="200" />
-      </bpmndi:BPMNShape>
-
-      <!-- Store Content Task -->
-      <bpmndi:BPMNShape id="Task_StoreContent_di" bpmnElement="Task_StoreContent">
-        <dc:Bounds x="1650" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-
-      <!-- Process Model Generated Event -->
-      <bpmndi:BPMNShape id="Event_ProcessModelGenerated_di" bpmnElement="Event_ProcessModelGenerated">
-        <dc:Bounds x="1812" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-
-      <!-- Display Process Model Task -->
-      <bpmndi:BPMNShape id="Task_DisplayProcessModel_di" bpmnElement="Task_DisplayProcessModel">
-        <dc:Bounds x="1900" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
-
-      <!-- Data Model Generated Event -->
-      <bpmndi:BPMNShape id="Event_DataModelGenerated_di" bpmnElement="Event_DataModelGenerated">
-        <dc:Bounds x="1812" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-
-      <!-- Generate UI Elements Task -->
-      <bpmndi:BPMNShape id="Task_GenerateUI_di" bpmnElement="Task_GenerateUI">
-        <dc:Bounds x="1900" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-
-      <!-- Generate Domain Services Task -->
-      <bpmndi:BPMNShape id="Task_GenerateDomainServices_di" bpmnElement="Task_GenerateDomainServices">
-        <dc:Bounds x="2060" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-
-      <!-- End Event -->
-      <bpmndi:BPMNShape id="EndEvent_ProcessComplete_di" bpmnElement="EndEvent_ProcessComplete">
-        <dc:Bounds x="2222" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-
-      <!-- Sequence Flow Connectors -->
-      <bpmndi:BPMNEdge id="Flow_Login_di" bpmnElement="Flow_Login">
-        <di:waypoint x="188" y="120" />
-        <di:waypoint x="240" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_LoginChoice_di" bpmnElement="Flow_LoginChoice">
-        <di:waypoint x="340" y="120" />
-        <di:waypoint x="395" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_UseApp_di" bpmnElement="Flow_UseApp">
-        <di:waypoint x="445" y="120" />
-        <di:waypoint x="500" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_ProvideFeedback_di" bpmnElement="Flow_ProvideFeedback">
-        <di:waypoint x="420" y="145" />
-        <di:waypoint x="420" y="230" />
-        <di:waypoint x="500" y="230" />
-      </bpmndi:BPMNEdge>
-
-      <!-- Add remaining sequence flow edges with proper waypoints -->
-      <!-- ... -->
-      <!-- Previous BPMNEdge elements remain the same -->
-      <bpmndi:BPMNEdge id="Flow_FillQuestionnaire_di" bpmnElement="Flow_FillQuestionnaire">
-        <di:waypoint x="600" y="120" />
-        <di:waypoint x="660" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_GenerateStakeholders_di" bpmnElement="Flow_GenerateStakeholders">
-        <di:waypoint x="760" y="120" />
-        <di:waypoint x="820" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_StakeholdersGenerated_di" bpmnElement="Flow_StakeholdersGenerated">
-        <di:waypoint x="920" y="120" />
-        <di:waypoint x="975" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_ApproveStakeholders_di" bpmnElement="Flow_ApproveStakeholders">
-        <di:waypoint x="1025" y="120" />
-        <di:waypoint x="1080" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_ImproveStakeholders_di" bpmnElement="Flow_ImproveStakeholders">
-        <di:waypoint x="1000" y="145" />
-        <di:waypoint x="1000" y="230" />
-        <di:waypoint x="1080" y="230" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_Artifacts_di" bpmnElement="Flow_Artifacts">
-        <di:waypoint x="1180" y="120" />
-        <di:waypoint x="1240" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <!-- Sequence flows for Generate Artifacts subprocess internals -->
-      <bpmndi:BPMNEdge id="Flow_StartToGenerate_di" bpmnElement="Flow_StartToGenerate">
-        <di:waypoint x="1298" y="180" />
-        <di:waypoint x="1350" y="180" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_EndArtifact_di" bpmnElement="Flow_EndArtifact">
-        <di:waypoint x="1450" y="180" />
-        <di:waypoint x="1502" y="180" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_StoreContent_di" bpmnElement="Flow_StoreContent">
-        <di:waypoint x="1590" y="120" />
-        <di:waypoint x="1650" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_ProcessModelEvent_di" bpmnElement="Flow_ProcessModelEvent">
-        <di:waypoint x="1750" y="120" />
-        <di:waypoint x="1812" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_DataModelEvent_di" bpmnElement="Flow_DataModelEvent">
-        <di:waypoint x="1700" y="160" />
-        <di:waypoint x="1700" y="210" />
-        <di:waypoint x="1812" y="210" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_DisplayProcessModel_di" bpmnElement="Flow_DisplayProcessModel">
-        <di:waypoint x="1848" y="120" />
-        <di:waypoint x="1900" y="120" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_GenerateUI_di" bpmnElement="Flow_GenerateUI">
-        <di:waypoint x="1848" y="210" />
-        <di:waypoint x="1900" y="210" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_DomainServices_di" bpmnElement="Flow_DomainServices">
-        <di:waypoint x="2000" y="210" />
-        <di:waypoint x="2060" y="210" />
-      </bpmndi:BPMNEdge>
-
-      <bpmndi:BPMNEdge id="Flow_EndProcess_di" bpmnElement="Flow_EndProcess">
-        <di:waypoint x="2160" y="210" />
-        <di:waypoint x="2222" y="210" />
-      </bpmndi:BPMNEdge>
-
     </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581">
+      <omgdc:Font name="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+      <omgdc:Font name="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>
-</bpmn:definitions>
+</definitions>
