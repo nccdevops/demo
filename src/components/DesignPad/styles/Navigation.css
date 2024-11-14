@@ -1,0 +1,30 @@
+
+  
+  /* src/components/DesignPad/styles/Navigation.css */
+  .io-about {
+    position: fixed;
+    bottom: 8px;
+    right: 80px;
+    z-index: 999;
+  }
+  
+  .io-control-list.io-horizontal {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .io-control-list.io-horizontal a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 20px;
+  }
+  
+  .io-control-list.io-horizontal a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Keep all other original component styles the same */
