@@ -29,23 +29,30 @@ export const Grid = () => {
   const bpmnRef = useRef(null);
   const [error, setError] = useState(null);
   const [modeler, setModeler] = useState(null);
+  const [loadingStatus, setLoadingStatus] = useState('initializing');
 
   // Initialize BPMN modeler
   useEffect(() => {
     if (!bpmnRef.current) return;
 
-    const bpmnModeler = new BpmnJS({
-      container: bpmnRef.current,
-      keyboard: {
-        bindTo: window
-      }
-    });
+    try {
+      const bpmnModeler = new BpmnJS({
+        container: bpmnRef.current,
+        keyboard: {
+          bindTo: window
+        }
+      });
 
-    setModeler(bpmnModeler);
+      setModeler(bpmnModeler);
+      setLoadingStatus('modeler-created');
 
-    return () => {
-      bpmnModeler.destroy();
-    };
+      return () => {
+        bpmnModeler.destroy();
+      };
+    } catch (err) {
+      console.error('Error initializing BPMN modeler:', err);
+      setError(`Failed to initialize BPMN modeler: ${err.message}`);
+    }
   }, []);
 
   // Load BPMN diagram
@@ -54,27 +61,40 @@ export const Grid = () => {
 
     const loadDiagram = async () => {
       try {
+        setLoadingStatus('loading-file');
         // Try to fetch custom diagram first
-        const response = await fetch('/data/diagram.bpmn');
+        const diagramPath = '/data/diagram.bpmn';
+        console.log('Attempting to load diagram from:', diagramPath);
+        
+        const response = await fetch(diagramPath);
+        console.log('Fetch response:', response.status, response.statusText);
         
         if (!response.ok) {
-          throw new Error('Custom diagram not found');
+          throw new Error(`Failed to load file (${response.status} ${response.statusText})`);
         }
 
         const bpmnXML = await response.text();
+        console.log('Successfully loaded BPMN XML:', bpmnXML.substring(0, 100) + '...');
+        
         await importDiagram(bpmnXML);
       } catch (error) {
-        console.warn('Loading default empty diagram:', error);
-        // Fall back to empty diagram if custom one fails
-        await importDiagram(EMPTY_DIAGRAM);
+        console.error('Error loading diagram:', error);
+        // Attempt to load empty diagram instead
+        console.log('Attempting to load empty diagram as fallback');
+        try {
+          await importDiagram(EMPTY_DIAGRAM);
+        } catch (emptyError) {
+          setError(`Failed to load both custom and empty diagrams. Original error: ${error.message}. Empty diagram error: ${emptyError.message}`);
+        }
       }
     };
 
     const importDiagram = async (xml) => {
       try {
+        setLoadingStatus('importing-xml');
         const result = await modeler.importXML(xml);
         
-        if (result.warnings.length) {
+        if (result.warnings?.length) {
           console.warn('Warnings while importing BPMN diagram:', result.warnings);
         }
 
@@ -83,9 +103,11 @@ export const Grid = () => {
         canvas.zoom('fit-viewport');
         
         setError(null);
+        setLoadingStatus('complete');
       } catch (err) {
-        console.error('Error importing BPMN diagram:', err);
-        setError(`Failed to load diagram: ${err.message}`);
+        console.error('Error importing BPMN XML:', err);
+        setError(`Failed to import diagram: ${err.message}`);
+        setLoadingStatus('error');
       }
     };
 
@@ -137,7 +159,10 @@ export const Grid = () => {
       {error ? (
         <div className="error-alert">
           <div className="error-alert__title">Error</div>
-          <div className="error-alert__description">{error}</div>
+          <div className="error-alert__description">
+            {error}
+            <div className="error-alert__status">Loading status: {loadingStatus}</div>
+          </div>
         </div>
       ) : (
         <div ref={bpmnRef} className="bpmn-container" />
